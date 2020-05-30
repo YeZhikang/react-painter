@@ -1,13 +1,16 @@
 import React, { createRef, useContext, useEffect, useState } from "react";
 import DrawContext from "../utils/context";
-import {PieChartOutlined, EditOutlined, StepBackwardOutlined,StepForwardOutlined  }  from '@ant-design/icons';
-import {Popover,Button} from "antd";
+import { PieChartOutlined, EditOutlined, StepBackwardOutlined, StepForwardOutlined } from '@ant-design/icons';
+import { Popover, Button } from "antd";
 import Eraser from "./tool/eraser";
 import ClearAll from "./tool/clear-all";
 import WidthSelector from "./tool/width-selector";
 import RectangleUse from "./tool/rectangle-use";
 import ColorPicker from "./tool/color-picker";
-import {imageCache, currentIndex} from "../utils/caches";
+import { imageCache, currentIndex } from "../utils/caches";
+
+let backStatus = false;
+let forwardStatus = false
 
 const colorArr = [
     '#618ce1',
@@ -29,18 +32,16 @@ const boldArr = [
 ]
 
 
-
-
-function CurrentStatus({ width, color }){
+function CurrentStatus({ width, color }) {
     return (
-        <div className={'current-status'}>
+        <div className={ 'current-status' }>
             <div
                 className={ 'color-picker' }
                 style={ { backgroundColor: color } }
             />
             <div
                 className={ 'width-radio' }
-                style={{marginRight: 0}}
+                style={ { marginRight: 0 } }
             >
                 <div
                     style={ { width: width + 2 + 'px', height: width + 2 + 'px' } }
@@ -51,7 +52,7 @@ function CurrentStatus({ width, color }){
     )
 }
 
-function Pencil(){
+function Pencil() {
 
     const { state, dispatch } = useContext(DrawContext)
 
@@ -63,16 +64,31 @@ function Pencil(){
             }
         })
     }
+
     return (
-        <Button className={'rectangle-button'} style={{paddingRight:'0'}} onClick={handleChangePencil} type={"link"}>
+        <Button
+            className={ 'rectangle-button' }
+            style={ { paddingRight: '0' } }
+            onClick={ handleChangePencil }
+            type={ "link" }
+        >
             <EditOutlined/>
         </Button>
     )
 }
 
-function BackButton(){
+function BackButton() {
 
     const { state, dispatch } = useContext(DrawContext)
+    const [able, setAble] = useState(false)
+
+    useEffect(() => {
+        setAble(state.currentIndex > 1)
+        // forwardStatus = state.currentIndex === state.len;
+        // console.log(state.currentIndex, state.len)
+        //
+        // console.log(backStatus)
+    }, [state])
 
     function handleBack() {
         dispatch({
@@ -82,15 +98,32 @@ function BackButton(){
             }
         })
     }
+
     return (
-        <Button disabled={state.backwardEnable} className={'rectangle-button'} style={{paddingRight:'0'}} onClick={handleBack} type={"link"}>
+        <Button
+            disabled={ !able }
+            className={ 'rectangle-button' }
+            style={ { paddingRight: '0' } }
+            onClick={ handleBack }
+            type={ "link" }
+        >
             <StepBackwardOutlined/>
         </Button>
     )
 }
 
 function ForwardButton() {
-    const {state, dispatch} = useContext(DrawContext)
+    const { state, dispatch } = useContext(DrawContext)
+
+    const [able, setAble] = useState(false)
+
+    useEffect(() => {
+        setAble(state.currentIndex !== state.len )
+        // forwardStatus = state.currentIndex === state.len;
+        // console.log(state.currentIndex, state.len)
+        //
+        // console.log(backStatus)
+    }, [state])
 
     function handleForward() {
         dispatch({
@@ -102,7 +135,13 @@ function ForwardButton() {
     }
 
     return (
-        <Button disabled={state.forwardEnable} className={'rectangle-button'} style={{paddingRight:'0'}} onClick={handleForward} type={"link"}>
+        <Button
+            disabled={ !able }
+            className={ 'rectangle-button' }
+            style={ { paddingRight: '0' } }
+            onClick={ handleForward }
+            type={ "link" }
+        >
             <StepForwardOutlined/>
         </Button>
     )
@@ -133,7 +172,10 @@ export default function ToolBar() {
             <RectangleUse/>
 
             <ClearAll/>
-            <CurrentStatus width={state.width} color={state.color}/>
+            <CurrentStatus
+                width={ state.width }
+                color={ state.color }
+            />
         </div>
     )
 }

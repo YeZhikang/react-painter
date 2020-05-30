@@ -32,7 +32,6 @@ function Canvas(props) {
         ctx.moveTo(0, 0)
         target = canvas;
         lineStyle = state;
-        console.log(currentIndex)
         if (!isRender) {
             isRender = true;
             saveImage()
@@ -58,6 +57,8 @@ function Canvas(props) {
                 type: 'MODIFY',
                 value: {
                     back: false,
+                    currentIndex,
+                    len: imageCache.length
                 }
             })
         } else if (state.forward) {
@@ -73,6 +74,8 @@ function Canvas(props) {
                 type: 'MODIFY',
                 value: {
                     forward: false,
+                    currentIndex,
+                    len: imageCache.length
                 }
             })
         }
@@ -155,7 +158,13 @@ function Canvas(props) {
         beginAt = [0, 0]
         isDown = false;
         saveImage()
-
+        dispatch({
+            type: 'MODIFY',
+            value: {
+                currentIndex,
+                len: imageCache.length
+            }
+        })
     }
 
     const canvasRef = createRef()
