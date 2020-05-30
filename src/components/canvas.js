@@ -32,17 +32,24 @@ function Canvas(props) {
         ctx.moveTo(0, 0)
         target = canvas;
         lineStyle = state;
+        console.log('sdasdasdskkk')
         if (!isRender) {
             isRender = true;
             saveImage()
         }
         if (state.clear) {
             clearAll()
+            imageCache = [];
+            isRender = false;
+            currentIndex = 0;
+
             dispatch({
                 type: 'MODIFY',
                 value: {
                     clear: false,
-                    type: 'pencil'
+                    type: 'pencil',
+                    currentIndex,
+                    len: imageCache.length
                 }
             })
         } else if (state.back) {
@@ -107,7 +114,6 @@ function Canvas(props) {
     const handleDown = (e) => {
         beginAt = [e.pageX - target.offsetLeft, e.pageY - target.offsetTop + 16]
         isDown = true;
-        console.log('yes')
         imageCache.splice(currentIndex, imageCache.length - currentIndex)
         ctx.beginPath()
         ctx.moveTo(...beginAt)

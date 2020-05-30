@@ -130,7 +130,7 @@ html,body{
 }
 
 .rectangle-button{
-    color: darkgrey;
+    /*color: darkgrey;*/
     transition: 0.2s;
 }
 
