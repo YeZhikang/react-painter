@@ -7,14 +7,15 @@ function loadingImage() {
 
 }
 
+let currentIndex = 0;
+let imageCache = [];
+
 function Canvas(props) {
     let ctx = null;
     let isDown = false;
     let beginAt = [0, 0];
     let target = null;
     let lineStyle = {};
-
-    let imageCache = null;
 
 
     const { state, dispatch } = useContext(DrawContext);
@@ -35,13 +36,24 @@ function Canvas(props) {
                     type: 'pencil'
                 }
             })
+        } else if (state.back) {
+            currentIndex = currentIndex - 1
+            // console.log(currentIndex)
+            // console.log(imageCache)
+            // console.log(imageCache.slice(currentIndex))
+            ctx.putImageData(imageCache.slice(currentIndex)[0], 0, 0)
+            dispatch({
+                type: 'MODIFY',
+                value: {
+                    back: false
+                }
+            })
         }
         if (state.type === 'eraser') {
             canvasRef.current.classList.add('container--clear')
         } else {
             canvasRef.current.classList.remove('container--clear')
         }
-
     }, [state])
 
     // function throttle(fn) {
@@ -79,11 +91,15 @@ function Canvas(props) {
     // }
 
     function saveImage() {  //储存此刻画布数据
-        imageCache = ctx.getImageData(0, 0, target.width, target.height)
+        currentIndex += 1;
+        console.log(currentIndex)
+        imageCache.splice(currentIndex - 1, imageCache.length - currentIndex + 1, ctx.getImageData(0,0,target.width, target.height))
+        console.log(imageCache)
+
     }
 
     function loadingImage() { //导入画布数据
-        ctx.putImageData(imageCache, 0, 0)
+        ctx.putImageData(imageCache.slice(-1)[0], 0, 0)
     }
 
     const chooser = new Chooser(state.type)

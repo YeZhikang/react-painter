@@ -1,6 +1,6 @@
 import React, { createRef, useContext, useState } from "react";
 import DrawContext from "../utils/context";
-import {PieChartOutlined, EditOutlined}  from '@ant-design/icons';
+import {PieChartOutlined, EditOutlined, RollbackOutlined }  from '@ant-design/icons';
 import {Popover,Button} from "antd";
 import Eraser from "./tool/eraser";
 import ClearAll from "./tool/clear-all";
@@ -69,6 +69,25 @@ function Pencil(){
     )
 }
 
+function BackButton(){
+
+    const { state, dispatch } = useContext(DrawContext)
+
+    function handleBack() {
+        dispatch({
+            type: 'MODIFY',
+            value: {
+                back: true
+            }
+        })
+    }
+    return (
+        <Button className={'rectangle-button'} style={{paddingRight:'0'}} onClick={handleBack} type={"link"}>
+            <RollbackOutlined/>
+        </Button>
+    )
+}
+
 
 export default function ToolBar() {
 
@@ -89,6 +108,7 @@ export default function ToolBar() {
             <WidthSelector/>
             <Eraser/>
             <Pencil/>
+            <BackButton/>
             <RectangleUse/>
 
             <ClearAll/>
