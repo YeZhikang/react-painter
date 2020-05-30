@@ -8,6 +8,7 @@ import WidthSelector from "./tool/width-selector";
 import RectangleUse from "./tool/rectangle-use";
 import ColorPicker from "./tool/color-picker";
 import { imageCache, currentIndex } from "../utils/caches";
+import rectangleArr from "../utils/rectangle-image-output";
 
 let backStatus = false;
 let forwardStatus = false
@@ -33,21 +34,39 @@ const boldArr = [
 
 
 function CurrentStatus({ width, color }) {
+    const { state, dispatch } = useContext(DrawContext)
+    const [current, setCurrent] = useState(null)
+
+    useEffect(() => {
+        if (['eraser', 'pencil'].includes(state.type)) {
+            setCurrent((
+                <div
+                    className={ 'width-radio' }
+                    style={ { marginRight: '0px' } }
+                >
+                    <div
+                        style={ { width: width + 2 + 'px', height: width + 2 + 'px' } }
+                        className={ 'width-circle' }
+                    />
+                </div>
+            ))
+        } else {
+            setCurrent((
+                <img
+                    style={ { height: '16px' } }
+                    src={ rectangleArr.find(item => item.name === state.type).src }
+                />
+            ))
+        }
+    }, [state])
+
     return (
-        <div className={ 'current-status' }>
+        <div className={ 'current-status fxal' }>
             <div
                 className={ 'color-picker' }
                 style={ { backgroundColor: color } }
             />
-            <div
-                className={ 'width-radio' }
-                style={ { marginRight: 0 } }
-            >
-                <div
-                    style={ { width: width + 2 + 'px', height: width + 2 + 'px' } }
-                    className={ 'width-circle' }
-                />
-            </div>
+            { current }
         </div>
     )
 }
@@ -118,7 +137,7 @@ function ForwardButton() {
     const [able, setAble] = useState(false)
 
     useEffect(() => {
-        setAble(state.currentIndex !== state.len )
+        setAble(state.currentIndex !== state.len)
         // forwardStatus = state.currentIndex === state.len;
         // console.log(state.currentIndex, state.len)
         //
@@ -164,13 +183,12 @@ export default function ToolBar() {
                 checkColor={ checkColor }
                 key={ item }
             />) }
+            <Pencil/>
+            <RectangleUse/>
             <WidthSelector/>
             <Eraser/>
-            <Pencil/>
             <BackButton/>
             <ForwardButton/>
-            <RectangleUse/>
-
             <ClearAll/>
             <CurrentStatus
                 width={ state.width }

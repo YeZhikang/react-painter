@@ -109,7 +109,7 @@ html,body{
     border: 1px solid darkgrey;
     transition: 0.2s;
     cursor: pointer;
-
+    margin-right: 12px;
 }
 
 .eraser--active{
@@ -149,13 +149,19 @@ html,body{
 /*    z-index: -1;*/
 /*}*/
 
+.fxal{
+    display: flex;
+    align-items: center;
+}
+
 .rectangle-unit{
-    height: 22px;
-    padding: 2px;
+    height: 26px;
+    padding: 5px;
     cursor: pointer;
     transition: 0.2s;
+
 }
 
 .rectangle-unit:hover{
-    background-color: rgba(65, 105, 225, 0.56);
+    background-color: rgba(65, 105, 225, 0.1);
 }

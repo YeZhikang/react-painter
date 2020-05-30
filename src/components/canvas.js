@@ -32,7 +32,6 @@ function Canvas(props) {
         ctx.moveTo(0, 0)
         target = canvas;
         lineStyle = state;
-        console.log('sdasdasdskkk')
         if (!isRender) {
             isRender = true;
             saveImage()
@@ -155,6 +154,9 @@ function Canvas(props) {
             //     ctx.clearRect(x, y, 16, 16)
             // }
 
+            if(state.type.includes('Filled')){
+                ctx.fillStyle = lineStyle.color
+            }
             chooser.draw(ctx, e, target, beginAt, loadingImage)
         }
     }

@@ -2,30 +2,7 @@ import { Button, Popover } from "antd";
 import { PieChartOutlined } from "@ant-design/icons";
 import React, { useContext } from "react";
 import DrawContext from "../../utils/context";
-import Oblong from '../../static/images/oblong.png'
-import RightAngle from '../../static/images/right-angle.png'
-import Square from '../../static/images/square.png'
-import TopAngle from '../../static/images/top-angle.png'
-
-
-const rectangleArr = [
-    {
-        name:'topRectangle',
-        src: TopAngle
-    },
-    {
-        name: 'rightRectangle',
-        src: RightAngle
-    },
-    {
-        name: 'square',
-        src: Square
-    },
-    {
-        name: 'round',
-        src: Oblong
-    }
-]
+import rectangleArr from "../../utils/rectangle-image-output";
 
 const RectangleUnit = ({ filename, typeName }) => {
     const {state,dispatch} = useContext(DrawContext)
@@ -50,7 +27,7 @@ const RectangleUnit = ({ filename, typeName }) => {
 const RectangleUsePopoverContent = () => {
     return (
         <div>
-            { rectangleArr.map(item => <RectangleUnit filename={ item.src } typeName={item.name} />) }
+            { rectangleArr.map(item => <RectangleUnit key={item.name} filename={ item.src } typeName={item.name} />) }
         </div>
     )
 }
