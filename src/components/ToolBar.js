@@ -1,12 +1,13 @@
-import React, { createRef, useContext, useState } from "react";
+import React, { createRef, useContext, useEffect, useState } from "react";
 import DrawContext from "../utils/context";
-import {PieChartOutlined, EditOutlined, RollbackOutlined }  from '@ant-design/icons';
+import {PieChartOutlined, EditOutlined, StepBackwardOutlined,StepForwardOutlined  }  from '@ant-design/icons';
 import {Popover,Button} from "antd";
 import Eraser from "./tool/eraser";
 import ClearAll from "./tool/clear-all";
 import WidthSelector from "./tool/width-selector";
 import RectangleUse from "./tool/rectangle-use";
 import ColorPicker from "./tool/color-picker";
+import {imageCache, currentIndex} from "../utils/caches";
 
 const colorArr = [
     '#618ce1',
@@ -82,8 +83,27 @@ function BackButton(){
         })
     }
     return (
-        <Button className={'rectangle-button'} style={{paddingRight:'0'}} onClick={handleBack} type={"link"}>
-            <RollbackOutlined/>
+        <Button disabled={state.backwardEnable} className={'rectangle-button'} style={{paddingRight:'0'}} onClick={handleBack} type={"link"}>
+            <StepBackwardOutlined/>
+        </Button>
+    )
+}
+
+function ForwardButton() {
+    const {state, dispatch} = useContext(DrawContext)
+
+    function handleForward() {
+        dispatch({
+            type: 'MODIFY',
+            value: {
+                forward: true
+            }
+        })
+    }
+
+    return (
+        <Button disabled={state.forwardEnable} className={'rectangle-button'} style={{paddingRight:'0'}} onClick={handleForward} type={"link"}>
+            <StepForwardOutlined/>
         </Button>
     )
 }
@@ -109,6 +129,7 @@ export default function ToolBar() {
             <Eraser/>
             <Pencil/>
             <BackButton/>
+            <ForwardButton/>
             <RectangleUse/>
 
             <ClearAll/>

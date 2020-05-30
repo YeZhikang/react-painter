@@ -3,12 +3,16 @@ import DrawContext from "../utils/context";
 import Chooser from "../utils/strategic-canvas";
 
 
+
+
+
 function loadingImage() {
 
 }
 
 let currentIndex = 0;
 let imageCache = [];
+let isRender = false;
 
 function Canvas(props) {
     let ctx = null;
@@ -21,12 +25,18 @@ function Canvas(props) {
     const { state, dispatch } = useContext(DrawContext);
 
     useEffect(() => {
+        let value = {}
         const canvas = document.querySelector('.container')
         if (!canvas.getContext) return;
         ctx = canvas.getContext('2d')
         ctx.moveTo(0, 0)
         target = canvas;
-        lineStyle = state
+        lineStyle = state;
+        console.log(currentIndex)
+        if (!isRender) {
+            isRender = true;
+            saveImage()
+        }
         if (state.clear) {
             clearAll()
             dispatch({
@@ -37,15 +47,32 @@ function Canvas(props) {
                 }
             })
         } else if (state.back) {
-            currentIndex = currentIndex - 1
-            // console.log(currentIndex)
-            // console.log(imageCache)
-            // console.log(imageCache.slice(currentIndex))
-            ctx.putImageData(imageCache.slice(currentIndex)[0], 0, 0)
+            if(currentIndex > 1){
+                currentIndex = currentIndex - 1
+                // console.log(currentIndex)
+                // console.log(imageCache)
+                // console.log(imageCache.slice(currentIndex))
+                ctx.putImageData(imageCache.slice(currentIndex - 1)[0], 0, 0)
+            }
             dispatch({
                 type: 'MODIFY',
                 value: {
-                    back: false
+                    back: false,
+                }
+            })
+        } else if (state.forward) {
+            if(currentIndex < imageCache.length){
+                currentIndex = currentIndex + 1
+                // console.log(currentIndex)
+                // console.log(imageCache)
+                // console.log(imageCache.slice(currentIndex))
+                // console.log(imageCache)
+                ctx.putImageData(imageCache.slice(currentIndex - 1)[0], 0, 0)
+            }
+            dispatch({
+                type: 'MODIFY',
+                value: {
+                    forward: false,
                 }
             })
         }
@@ -55,6 +82,7 @@ function Canvas(props) {
             canvasRef.current.classList.remove('container--clear')
         }
     }, [state])
+
 
     // function throttle(fn) {
     //     let timer = Date.now();
@@ -67,6 +95,7 @@ function Canvas(props) {
     //     }
     // }
 
+
     const clearAll = () => {
         ctx.clearRect(0, 0, target.width, target.height)
     }
@@ -75,10 +104,11 @@ function Canvas(props) {
     const handleDown = (e) => {
         beginAt = [e.pageX - target.offsetLeft, e.pageY - target.offsetTop + 16]
         isDown = true;
-        saveImage()
         console.log('yes')
+        imageCache.splice(currentIndex, imageCache.length - currentIndex)
         ctx.beginPath()
         ctx.moveTo(...beginAt)
+
     }
 
     // const drawRectangle = () => {
@@ -92,10 +122,7 @@ function Canvas(props) {
 
     function saveImage() {  //储存此刻画布数据
         currentIndex += 1;
-        console.log(currentIndex)
-        imageCache.splice(currentIndex - 1, imageCache.length - currentIndex + 1, ctx.getImageData(0,0,target.width, target.height))
-        console.log(imageCache)
-
+        imageCache.splice(currentIndex - 1, imageCache.length - currentIndex + 1, ctx.getImageData(0, 0, target.width, target.height))
     }
 
     function loadingImage() { //导入画布数据
@@ -126,7 +153,9 @@ function Canvas(props) {
 
     const handleUp = (e) => {
         beginAt = [0, 0]
-        isDown = false
+        isDown = false;
+        saveImage()
+
     }
 
     const canvasRef = createRef()
