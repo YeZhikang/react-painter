@@ -2,7 +2,7 @@ import React, { createContext, useEffect, useReducer } from 'react';
 import './App.css';
 import Canvas from "./components/canvas";
 import DrawContext from "./utils/context";
-import ToolBar from "./components/ToolBar";
+import ToolBar from "./components/tool-bar";
 import '@ant-design/icons'
 import antd from 'antd'
 

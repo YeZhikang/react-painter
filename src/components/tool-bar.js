@@ -3,11 +3,10 @@ import DrawContext from "../utils/context";
 import { PieChartOutlined, EditOutlined, StepBackwardOutlined, StepForwardOutlined } from '@ant-design/icons';
 import { Popover, Button } from "antd";
 import Eraser from "./tool/eraser";
-import ClearAll from "./tool/clear-all";
+import {ClearAll, ExportImages} from "./tool/clear-all";
 import WidthSelector from "./tool/width-selector";
 import RectangleUse from "./tool/rectangle-use";
 import ColorPicker from "./tool/color-picker";
-import { imageCache, currentIndex } from "../utils/caches";
 import rectangleArr from "../utils/rectangle-image-output";
 
 let backStatus = false;
@@ -191,6 +190,7 @@ export default function ToolBar() {
             <Eraser/>
             <BackButton/>
             <ForwardButton/>
+            <ExportImages/>
             <ClearAll/>
             <CurrentStatus
                 width={ state.width }

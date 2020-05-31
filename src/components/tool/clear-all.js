@@ -1,5 +1,18 @@
 import React, { useContext } from "react";
 import DrawContext from "../../utils/context";
+import Canvas2Image from "../../utils/canvas2image";
+
+
+function ExportImages() {
+    const exportImage = () => {
+        const canvas = document.querySelector('.container')
+        Canvas2Image.saveAsPNG(canvas, canvas.width, canvas.height)
+    }
+
+    return (
+        <span onClick={exportImage} className={'clear-button'}>导出图片</span>
+    )
+}
 
 function ClearAll(){
     const { state, dispatch } = useContext(DrawContext)
@@ -17,4 +30,4 @@ function ClearAll(){
     )
 }
 
-export default ClearAll
+export  {ClearAll, ExportImages}
