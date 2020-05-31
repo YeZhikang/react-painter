@@ -8,5 +8,5 @@ yarn start
 ```
 
 ## 视图效果
-![demo-gif](src/static/images/demo-gif.gif)
+![demo-gif](https://www.yezhikang.site:8081/static/demo-gif.gif)
 
